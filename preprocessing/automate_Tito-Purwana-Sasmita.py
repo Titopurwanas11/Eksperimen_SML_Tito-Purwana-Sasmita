@@ -197,13 +197,13 @@ if __name__ == "__main__":
 
     input_path = os.path.join(
         project_root,
-        "Bank_raw",
+        "bank_raw",
         "bank-full.csv"
     )
 
     output_dir = os.path.join(
         current_dir,
-        "Bank_preprocessing"
+        "bank_preprocessing"
     )
 
     preprocess_data(
