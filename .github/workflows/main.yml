@@ -41,7 +41,7 @@ jobs:
 
       - name: Run preprocessing script
         run: |
-          python preprocessing/automate_Tito_Purwana_Sasmita.py
+          python preprocessing/automate_Tito-Purwana-Sasmita.py
 
       - name: Validate preprocessing outputs
         run: |
