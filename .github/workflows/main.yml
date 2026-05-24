@@ -53,7 +53,7 @@ jobs:
           echo "All preprocessing outputs were generated successfully."
 
       - name: Upload preprocessing artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: bank-preprocessing-output
           path: preprocessing/bank_preprocessing/
