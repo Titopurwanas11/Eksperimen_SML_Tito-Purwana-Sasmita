@@ -1,0 +1,73 @@
+name: Preprocessing Workflow
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "preprocessing/bank_preprocessing/**"
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  preprocessing:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Check repository files
+        run: |
+          echo "Current directory:"
+          pwd
+          echo "Repository files:"
+          ls -R
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run preprocessing script
+        run: |
+          python preprocessing/automate_Tito_Purwana_Sasmita.py
+
+      - name: Validate preprocessing outputs
+        run: |
+          test -f preprocessing/bank_preprocessing/train_preprocessed.csv
+          test -f preprocessing/bank_preprocessing/test_preprocessed.csv
+          test -f preprocessing/bank_preprocessing/preprocessor.joblib
+          test -f preprocessing/bank_preprocessing/feature_names.json
+          test -f preprocessing/bank_preprocessing/metadata.json
+          echo "All preprocessing outputs were generated successfully."
+
+      - name: Upload preprocessing artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: bank-preprocessing-output
+          path: preprocessing/bank_preprocessing/
+
+      - name: Commit preprocessing outputs
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add preprocessing/bank_preprocessing/
+
+          if git diff --cached --quiet; then
+            echo "No preprocessing changes to commit."
+          else
+            git commit -m "Update preprocessing outputs"
+            git push
+          fi
